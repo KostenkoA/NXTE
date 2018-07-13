@@ -1,16 +1,17 @@
 <?php
 
+const LINE_T_B    = '=';
+const LINE_X      = '-';
+const LINE_Y      = '|';
 const SPACING_X   = 1;
 const SPACING_Y   = 0;
-const JOINT_CHAR  = '=';
-const LINE_X_CHAR  = '-';
-const LINE_Y_CHAR = '|';
+
 
 $table = array(
     array(
         'House' => 'Baratheon',
         'Sigil' => 'A crowned stag',
-        'Motto' => 'Ours is the Fury',
+        'Motto' => 'Ours is the Fury, sdsaaddsadas, sdadasdasd',
     ),
     array(
         'Leader' => 'Eddard Stark',
@@ -35,39 +36,39 @@ $table = array(
  * @param $table
  * @return array
  */
-function columns_headers($table)
+function columnsHeaders($table)
 {
     foreach ($table as $array) {
         foreach ($array as $key => $value){
             $headers[] = $key;
         }
     }
-    $uniqueHeaders = array_unique($headers);
-    asort($uniqueHeaders);
+    $uniqueHeaders = \array_unique($headers);
+    \asort($uniqueHeaders);
     return $uniqueHeaders;
 }
 
 /**
  * determine columns lengths
  * @param $table
- * @param $columns_headers
+ * @param $columnsHeaders
  * @return array
  */
-function columns_lengths($table, $columns_headers)
+function columnsLengths($table, $columnsHeaders)
 {
     $lengths = [];
-    foreach ($columns_headers as $header) {
-        $header_length = strlen($header);
-        $max           = $header_length;
+    foreach ($columnsHeaders as $header) {
+        $headerLength = \strlen($header);
+        $max           = $headerLength;
         foreach ($table as $row) {
             if (isset($row[$header])) {
-                $length = strlen($row[$header]);
+                $length = \strlen($row[$header]);
                 if ($length > $max) {
                     $max = $length;
                 }
             }
         }
-        if (($max % 2) != ($header_length % 2)) {
+        if (($max % 2) != ($headerLength % 2)) {
             $max += 1;
         }
 
@@ -79,16 +80,16 @@ function columns_lengths($table, $columns_headers)
 
 /**
  * create row separator
- * @param $columns_lengths
+ * @param $columnsLengths
  * @param string $line
  * @return string
  */
-function row_separator($columns_lengths, $line = JOINT_CHAR)
+function rowSeparator($columnsLengths, $line = LINE_T_B)
 {
     $row = '';
-    foreach ($columns_lengths as $column_length) {
-        $row .= str_repeat($line,
-            (SPACING_X * 3) + $column_length
+    foreach ($columnsLengths as $columnLength) {
+        $row .= \str_repeat($line,
+            (SPACING_X * 3) + $columnLength
         );
     }
     $row .= $line;
@@ -98,76 +99,76 @@ function row_separator($columns_lengths, $line = JOINT_CHAR)
 
 /**
  * create row spacer
- * @param $columns_lengths
+ * @param $columnsLengths
  * @return string
  */
-function row_spacer($columns_lengths)
+function rowSpacer($columnsLengths)
 {
     $row = '';
-    foreach ($columns_lengths as $column_length) {
-        $row .= LINE_Y_CHAR . str_repeat(' ',
-                (SPACING_X * 2) + $column_length
+    foreach ($columnsLengths as $columnLength) {
+        $row .= LINE_Y . \str_repeat(' ',
+                (SPACING_X * 2) + $columnLength
             );
     }
-    $row .= LINE_Y_CHAR;
+    $row .= LINE_Y;
 
     return $row;
 }
 
 /**
  * create row headers
- * @param $columns_headers
- * @param $columns_lengths
+ * @param $columnsHeaders
+ * @param $columnsLengths
  * @return string
  */
-function row_headers($columns_headers, $columns_lengths)
+function rowHeaders($columnsHeaders, $columnsLengths)
 {
     $row = '';
-    foreach ($columns_headers as $header) {
-        $row .= LINE_Y_CHAR . str_pad($header,
-                (SPACING_X * 2) + $columns_lengths[$header],
+    foreach ($columnsHeaders as $header) {
+        $row .= LINE_Y . \str_pad($header,
+                (SPACING_X * 2) + $columnsLengths[$header],
                 ' ',
                 STR_PAD_LEFT
             );
     }
-    $row .= LINE_Y_CHAR;
+    $row .= LINE_Y;
 
     return $row;
 }
 
 /**
  * create row cells
- * @param $row_cells
- * @param $columns_headers
- * @param $columns_lengths
+ * @param $rowCells
+ * @param $columnsHeaders
+ * @param $columnsLengths
  * @return string
  */
-function row_cells($row_cells, $columns_headers, $columns_lengths)
+function rowCells($rowCells, $columnsHeaders, $columnsLengths)
 {
     $row = '';
-    foreach ($columns_headers as $header) {
-        if (isset($row_cells[$header])) {
-            $row .= LINE_Y_CHAR . str_repeat(' ',
+    foreach ($columnsHeaders as $header) {
+        if (isset($rowCells[$header])) {
+            $row .= LINE_Y . \str_repeat(' ',
                     SPACING_X
-                ) . str_pad($row_cells[$header],
-                    SPACING_X + $columns_lengths[$header],
+                ) . \str_pad($rowCells[$header],
+                    SPACING_X + $columnsLengths[$header],
                     ' ',
                     STR_PAD_LEFT
                 );
         }
 
         else {
-            $row .= LINE_Y_CHAR . str_repeat(' ',
+            $row .= LINE_Y . \str_repeat(' ',
                     SPACING_X
                 ) . str_pad('',
-                    SPACING_X + $columns_lengths[$header],
+                    SPACING_X + $columnsLengths[$header],
                     ' ',
                     STR_PAD_LEFT
                 );
         }
 
     }
-    $row .= LINE_Y_CHAR;
+    $row .= LINE_Y;
 
     return $row;
 }
